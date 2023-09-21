@@ -1,16 +1,18 @@
 package com.example.activitesandintents
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
 
 class MainActivity : AppCompatActivity() {
     private val LOG_TAG = MainActivity::class.java.simpleName
     val EXTRA_MESSAGE = "com.example.android.twoactivities.extra.MESSAGE"
+    val EXTRA_REPLY = "com.example.android.twoactivities.extra.REPLY"
+    val TEXT_REQUEST = 1
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,14 +24,29 @@ class MainActivity : AppCompatActivity() {
         val btnKirim = findViewById<Button>(R.id.button_main)
 
 
-        btnKirim?.setOnClickListener(View.OnClickListener {
+        btnKirim.setOnClickListener {
             Log.d(LOG_TAG, "Button clicked!")
             val intent = Intent(this, MainActivity2::class.java)
-            val message = mMessageEditText?.text.toString()
-//            Log.d(LOG_TAG, message)
+            val message = mMessageEditText.text.toString()
             intent.putExtra(EXTRA_MESSAGE, message)
-            startActivity(intent)
-        })
+            startActivityForResult(intent, TEXT_REQUEST);
+        }
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode === TEXT_REQUEST) {
+            if (resultCode === RESULT_OK) {
+                val mReplyHeadTextView = findViewById<TextView>(R.id.text_header_reply)
+                val mReplyTextView = findViewById<TextView>(R.id.text_message_reply)
+                val reply = data?.getStringExtra(EXTRA_REPLY)
+                mReplyHeadTextView.visibility
+                mReplyTextView.text = reply
+                mReplyTextView.visibility
+            }
+        }
+
+
     }
 }
-
